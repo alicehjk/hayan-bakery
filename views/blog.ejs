@@ -1,0 +1,11 @@
+<%- include('partials/head') %>
+<h1>From the Kitchen</h1>
+<div class="list-group">
+  <% posts.forEach(p => { %>
+    <a class="list-group-item list-group-item-action" href="/post/<%= p.slug %>">
+      <strong><%= p.title %></strong>
+      <small class="text-muted d-block"><%= new Date(p.createdAt).toLocaleString() %></small>
+    </a>
+  <% }) %>
+</div>
+<%- include('partials/foot') %>

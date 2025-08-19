@@ -1,0 +1,19 @@
+<%- include('partials/head') %>
+<form class="form-inline mb-3">
+  <input name="q" class="form-control mr-2" placeholder="Search" value="<%= q %>">
+  <button class="btn btn-primary">Search</button>
+</form>
+<div class="row">
+  <% items.forEach(p => { %>
+    <div class="col-md-4 mb-3">
+      <div class="card h-100">
+        <img class="card-img-top" src="<%= p.image || '/images/placeholder.jpg' %>" alt="">
+        <div class="card-body">
+          <h5 class="card-title"><a href="/product/<%= p.slug %>"><%= p.title %></a></h5>
+          <p class="card-text">$<%= p.price.toFixed(2) %></p>
+        </div>
+      </div>
+    </div>
+  <% }) %>
+</div>
+<%- include('partials/foot') %>

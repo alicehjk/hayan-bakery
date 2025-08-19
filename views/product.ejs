@@ -1,0 +1,12 @@
+<%- include('partials/head') %>
+<div class="row">
+  <div class="col-md-6">
+    <img class="img-fluid" src="<%= item.image || '/images/placeholder.jpg' %>" alt="">
+  </div>
+  <div class="col-md-6">
+    <h1><%= item.title %></h1>
+    <p class="lead">$<%= item.price.toFixed(2) %></p>
+    <p><%= item.desc %></p>
+  </div>
+</div>
+<%- include('partials/foot') %>

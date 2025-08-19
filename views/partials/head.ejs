@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Hayan Bakery</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<nav class="navbar navbar-expand navbar-light bg-light">
+  <a class="navbar-brand" href="/">Hayan Bakery</a>
+  <ul class="navbar-nav mr-auto">
+    <li class="nav-item"><a class="nav-link" href="/catalog">Catalog</a></li>
+    <li class="nav-item"><a class="nav-link" href="/blog">Blog</a></li>
+    <% if (user && user.role === 'admin') { %>
+      <li class="nav-item"><a class="nav-link" href="/admin">Admin</a></li>
+    <% } %>
+  </ul>
+  <ul class="navbar-nav">
+    <% if (!user) { %>
+      <li class="nav-item"><a class="nav-link" href="/auth/login">Login</a></li>
+      <li class="nav-item"><a class="nav-link" href="/auth/signup">Sign up</a></li>
+    <% } else { %>
+      <li class="nav-item nav-link">Hi, <%= user.username %></li>
+      <li class="nav-item"><a class="nav-link" href="/auth/logout">Logout</a></li>
+    <% } %>
+  </ul>
+</nav>
+<div class="container py-4">

@@ -1,0 +1,16 @@
+<%- include('partials/head') %>
+<h1>Fresh This Week</h1>
+<div class="row">
+  <% latest.forEach(p => { %>
+    <div class="col-md-4 mb-3">
+      <div class="card h-100">
+        <img class="card-img-top" src="<%= p.image || '/images/placeholder.jpg' %>" alt="">
+        <div class="card-body">
+          <h5 class="card-title"><a href="/product/<%= p.slug %>"><%= p.title %></a></h5>
+          <p class="card-text">$<%= p.price.toFixed(2) %></p>
+        </div>
+      </div>
+    </div>
+  <% }) %>
+</div>
+<%- include('partials/foot') %>
