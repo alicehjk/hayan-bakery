@@ -55,3 +55,4 @@ app.use('/admin', ensureLogin.ensureLoggedIn('/auth/login'), require('./routes/a
 
 app.use((req, res) => res.status(404).render('404'));
 app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
+app.use('/vendor', require('express').static(require('path').join(__dirname, 'node_modules/bootstrap/dist')));

@@ -1,19 +1,30 @@
 <%- include('partials/head') %>
-<form class="form-inline mb-3">
-  <input name="q" class="form-control mr-2" placeholder="Search" value="<%= q %>">
+
+<div class="page-title">
+  <h1 class="mb-0">Catalog</h1>
+  <span class="page-sub">Fresh bakes & seasonal picks</span>
+</div>
+
+<form class="form-inline mb-3 searchbar">
+  <input name="q" class="form-control mr-2 flex-grow-1" style="min-width:260px" placeholder="Search bread, buns, cakes..." value="<%= q %>">
   <button class="btn btn-primary">Search</button>
 </form>
+
 <div class="row">
   <% items.forEach(p => { %>
     <div class="col-md-4 mb-3">
       <div class="card h-100">
         <img class="card-img-top" src="<%= p.image || '/images/placeholder.jpg' %>" alt="">
         <div class="card-body">
-          <h5 class="card-title"><a href="/product/<%= p.slug %>"><%= p.title %></a></h5>
-          <p class="card-text">$<%= p.price.toFixed(2) %></p>
+          <h5 class="card-title mb-2">
+            <a href="/product/<%= p.slug %>"><%= p.title %></a>
+          </h5>
+          <div class="price">$<%= Number(p.price).toFixed(2) %></div>
+          <p class="card-text mt-2 text-muted"><%= (p.desc || '').slice(0, 90) %><%= (p.desc && p.desc.length>90) ? '…' : '' %></p>
         </div>
       </div>
     </div>
   <% }) %>
 </div>
+
 <%- include('partials/foot') %>
