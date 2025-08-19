@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const PostSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  slug: { type: String, required: true, unique: true },
-  body: { type: String, required: true }
+  title: String,
+  slug: { type: String, unique: true },
+  body: String
 }, { timestamps: true });
+
 module.exports = mongoose.model('Post', PostSchema);

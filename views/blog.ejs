@@ -1,20 +1,14 @@
 <%- include('partials/head') %>
-
-<div class="page-title">
-  <h1 class="mb-0">From the Kitchen</h1>
-  <span class="page-sub">Notes, drops, and stories</span>
+<%- include('partials/navbar', { activePage: 'blog', user: user }) %>
+<div class="container py-4">
+  <div class="d-flex align-items-baseline mb-3">
+    <h1 class="mb-0">From the Kitchen</h1>
+    <span class="ml-2 text-muted">Notes, drops, and stories</span>
+  </div>
+  <div class="list-group">
+    <% (posts || []).forEach(p => { %>
+      <a class="list-group-item list-group-item-action" href="#"><strong><%= p.title %></strong><br><span class="text-muted"><%= (p.body || '').slice(0, 120) %></span></a>
+    <% }) %>
+  </div>
 </div>
-
-<div class="d-grid" style="gap:14px">
-  <% posts.forEach(p => { %>
-    <a class="list-card" href="/post/<%= p.slug %>">
-      <div class="d-flex justify-content-between align-items-center">
-        <strong style="font-size:1.05rem"><%= p.title %></strong>
-        <span class="list-meta"><%= new Date(p.createdAt).toLocaleDateString() %></span>
-      </div>
-      <div class="list-meta mt-1"><%= (p.body || '').slice(0, 140) %><%= (p.body && p.body.length>140) ? '…' : '' %></div>
-    </a>
-  <% }) %>
-</div>
-
 <%- include('partials/foot') %>

@@ -1,8 +1,8 @@
 <%- include('partials/head') %>
 <%- include('partials/navbar', { activePage: '', user: user }) %>
 <div class="container py-5">
-  <h1 class="display-4">404</h1>
-  <p class="lead text-muted">We couldn't find that page.</p>
+  <h1 class="display-4">Something went wrong</h1>
+  <p class="lead text-muted"><%= (error && error.message) ? error.message : 'Please try again.' %></p>
   <a class="btn btn-primary" href="/">Go home</a>
 </div>
 <%- include('partials/foot') %>

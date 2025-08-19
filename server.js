@@ -1,58 +1,74 @@
 'use strict';
 require('dotenv').config();
-const path = require('path');
 const express = require('express');
-const session = require('express-session');
+const path = require('path');
 const helmet = require('helmet');
-const mongoSanitize = require('express-mongo-sanitize');
 const rateLimit = require('express-rate-limit');
-const xssClean = require('xss-clean');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
+const session = require('express-session');
 const mongoose = require('mongoose');
 const passport = require('passport');
-const ensureLogin = require('connect-ensure-login');
+const LocalStrategy = require('passport-local').Strategy;
 
+// Models
 const User = require('./models/User');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-
-mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/hayan_bakery');
-
-app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
+// Security & parsing
+app.use(helmet());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-
-app.use(helmet());
 app.use(mongoSanitize());
-app.use(xssClean());
-const limiter = rateLimit({ windowMs: 60 * 1000, max: 100 });
-app.use(limiter);
+app.use(xss());
+app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 500 }));
 
+// Sessions & Passport
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'session-key',
+  secret: process.env.SESSION_SECRET || 'devsecret',
   resave: false,
   saveUninitialized: false,
-  cookie: { httpOnly: true, sameSite: 'lax', secure: false, maxAge: 1000 * 60 * 10 }
+  cookie: { httpOnly: true, sameSite: 'lax' }
 }));
-
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(User.createStrategy());
+passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// Static
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/vendor/bootstrap', express.static(path.join(__dirname, 'node_modules/bootstrap/dist')));
+app.use('/vendor/jquery', express.static(path.join(__dirname, 'node_modules/jquery/dist')));
 
-app.use((req, res, next) => {
-  res.locals.user = req.user || null;
-  next();
+// Make user available in views
+app.use((req, res, next) => { res.locals.user = req.user; next(); });
+
+// Mongo
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/hayan_bakery';
+mongoose.connect(MONGO_URI).then(() => {
+  console.log('Mongo connected');
+}).catch(err => {
+  console.error('Mongo connect error:', err);
 });
 
+// Routes
 app.use('/', require('./routes/site'));
 app.use('/auth', require('./routes/auth'));
-app.use('/admin', ensureLogin.ensureLoggedIn('/auth/login'), require('./routes/admin'));
 
-app.use((req, res) => res.status(404).render('404'));
+// 404
+app.use((req, res) => {
+  res.status(404).render('404');
+});
+
+// Error handler
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(err.status || 500).render('500', { error: err });
+});
+
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
-app.use('/vendor', require('express').static(require('path').join(__dirname, 'node_modules/bootstrap/dist')));
