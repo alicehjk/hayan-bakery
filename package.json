@@ -4,7 +4,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "seed": "node seeds/seed.js"
+    "start:seed": "node seeds/seed.js && node server.js",
+    "dev": "nodemon server.js",
+    "lint": "eslint ."
   },
   "dependencies": {
     "bootstrap": "4.6.2",
